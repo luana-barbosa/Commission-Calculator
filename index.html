@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Calculo Igreen</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    select {
+        padding: 10px;
+        width: 100%;
+        max-width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .form-row {
+        margin-top: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .space-between {
+        margin-right: 150px;
+    }
+</style>
+
+<body>
+
+    <!-- Responsive navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" data-i18n="header.toolbar">Seja bem-vindo</a>
+    </nav>
+
+    <!-- Header - set the background image for the header in the line below-->
+    <header class="py-3 background-image" id="about" style="background-image: url('img/banner.png')"> </header>
+
+    <!-- Content section -->
+    <section class="py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="estado">Selecione um Estado:</label>
+                        <select id="estado" name="estado" class="form-control" onchange="calcularDesconto()">
+                            <option value="">-- Selecione --</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="tiposkwh">Selecione o tipo de KWh:</label>
+                        <select id="tiposkwh" name="tiposkwh" class="form-control" onchange="setValorPorTipo()">
+                            <option value="">-- Selecione --</option>
+                            <option value="TRI">Trifásico</option>
+                            <option value="BI">Bifásico</option>
+                            <option value="MONO">Monofásico</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="valorfatura">Informe o valor da sua fatura</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" id="valorfatura" name="valorfatura" class="form-control"
+                                   placeholder="0,00" oninput="calcularValorIgreen()" step="any">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="comissao">Comissão (R$)</label>
+                        <input type="text" id="comissao" name="comissao" class="form-control"
+                               placeholder="R$ 0,00" readonly>
+                    </div>
+                </div>
+                <h3 style="margin-top: 30px;">Consumo KWh</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="ConsumoTSD">Consumo TSD</label>
+                        <input type="number" id="ConsumoTSD" name="ConsumoTSD" class="form-control"
+                            placeholder="Consumo TSD" oninput="calcularSoma()" step="any">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="ConsumoTE">Consumo TE</label>
+                        <input type="number" id="ConsumoTE" name="ConsumoTE" class="form-control"
+                            placeholder="Consumo TE" oninput="calcularSoma()" step="any">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="totalConsumo">Valor por KWh</label>
+                        <input type="text" id="totalConsumo" name="totalConsumo" class="form-control" placeholder="KWh"
+                            readonly>
+                    </div>
+                </div>
+                <h3 style="margin-top: 30px;">Fornecimentos da distribuidora</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="custoKwh">Custo do KWh (R$)</label>
+                        <input type="text" id="custoKwh" name="custoKwh" class="form-control" placeholder="R$ 0,00"
+                            readonly>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="IlumiPublic">Iluminação Publica</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input type="number" id="IlumiPublic" name="IlumiPublic" class="form-control"
+                                placeholder="0,00" oninput="calcularValorIgreen()" step="any">
+                        </div>
+                    </div>
+                </div>
+                <h3 style="margin-top: 25px;">Valores Igreen</h3> <!-- Título acima dos campos -->
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="valorIgreen">Valor para Igreen (R$)</label>
+                        <input type="text" id="valorIgreen" style="background-color: aquamarine;" name="valorIgreen"
+                            class="form-control" placeholder="R$ 0,00" readonly>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="valorDesconto">Valor do Desconto Igreen (R$)</label>
+                        <input type="text" id="valorDesconto" style="background-color: aquamarine;" name="valorDesconto"
+                            class="form-control" placeholder="R$ 0,00" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="valorFaturaDesconto">Pagamento final Cliente (R$)</label>
+                        <input type="text" id="valorFaturaDesconto" name="valorFaturaDesconto" class="form-control"
+                            placeholder="R$ 0,00" readonly>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="descontoMedioAnual">Desconto Anual Médio(R$)</label>
+                        <input type="text" id="descontoMedioAnual" name="descontoMedioAnual" class="form-control"
+                            placeholder="R$ 0,00" readonly>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Luana Barbosa 2024</p>
+        </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+
+    <!-- Calculos -->
+    <script>
+
+        let valorKwh = 0; // Variável para armazenar o valor do KWh
+        const valorMedioFatura = 100; // Exemplo de valor médio da fatura para cálculo do desconto médio anual
+
+        function calcularSoma() {
+            const consumoTSD = parseFloat(document.getElementById('ConsumoTSD').value) || 0;
+            const consumoTE = parseFloat(document.getElementById('ConsumoTE').value) || 0;
+            const total = consumoTSD + consumoTE;
+
+            document.getElementById('totalConsumo').value = total;
+
+            // Verifica se o valor de KWh foi definido e se os consumos têm valores válidos
+            if (valorKwh > 0 && total > 0) {
+                const custoTotal = total * valorKwh;
+                document.getElementById('custoKwh').value = custoTotal.toFixed(2); // Exibe o custo com duas casas decimais
+
+                // Chama a função para calcular o valor Igreen
+                calcularValorIgreen(custoTotal);
+            } else {
+                document.getElementById('custoKwh').value = ''; // Limpa o campo de custo se não houver entrada válida
+            }
+        }
+
+
+        function setValorPorTipo() {
+            const tipoKwh = document.getElementById('tiposkwh').value;
+            // Define valores padrão de acordo com o tipo de KWh selecionado
+            switch (tipoKwh) {
+                case 'TRI':
+                    valorKwh = 100.00;
+                    break;
+                case 'BI':
+                    valorKwh = 50.00;
+                    break;
+                case 'MONO':
+                    valorKwh = 30.00;
+                    break;
+                default:
+                    valorKwh = 0;
+                    return; // Sai da função se não houver tipo selecionado
+            }
+            // Não preenche automaticamente os campos de consumo
+            calcularSoma(); // Não chama calcularSoma aqui, pois ainda não temos um valor válido
+        }
+
+
+        function calcularValorIgreen() {
+            const valorFatura = parseFloat(document.getElementById('valorfatura').value) || 0;
+            const custoKwh = parseFloat(document.getElementById('custoKwh').value.replace('R$ ', '').replace(',', '.')) || 0;
+            const ilumiPublic = parseFloat(document.getElementById('IlumiPublic').value) || 0;
+            // Verifica se todos os campos necessários estão preenchidos
+            if (valorFatura && custoKwh && ilumiPublic > 0) {
+                const valorIgreen = valorFatura - custoKwh - ilumiPublic; // Calcula valor Igreen
+                document.getElementById('valorIgreen').value = 'R$ ' + valorIgreen.toFixed(2); // Exibe o valor Igreen com duas casas decimais
+                // Calcula o desconto
+                const desconto = calcularDesconto(valorIgreen);
+                document.getElementById('valorDesconto').value = 'R$ ' + desconto.toFixed(2); // Exibe o valor do desconto
+
+                // Calcula o valorFaturaDesconto
+                const valorFaturaDesconto = valorFatura - desconto;
+                document.getElementById('valorFaturaDesconto').value = 'R$ ' + valorFaturaDesconto.toFixed(2); // Exibe o valor da fatura com desconto
+
+                // Calcula e exibe o desconto médio anual
+                const descontoMedioAnual = (desconto * 12); // Supondo que o desconto seja aplicado uma vez por mês
+                document.getElementById('descontoMedioAnual').value = 'R$ ' + descontoMedioAnual.toFixed(2); // Exibe o desconto médio anual
+
+                // Cálculo da comissão
+                const comissao = valorFatura * 0.04; // 4% da fatura
+                document.getElementById('comissao').value = 'R$ ' + comissao.toFixed(2); // Exibe o valor da comissão
+            } else {
+                document.getElementById('valorIgreen').value = ''; // Limpa o campo de valorIgreen se não houver entrada válida
+                document.getElementById('valorDesconto').value = ''; // Limpa o campo de desconto
+                document.getElementById('descontoMedioAnual').value = ''; // Limpa o campo de desconto médio anual
+                document.getElementById('valorFaturaDesconto').value = ''; // Limpa o campo de valorFaturaDesconto
+                document.getElementById('comissao').value = ''; // Limpa o campo de comissão
+            }
+        }
+
+        function calcularDesconto(valorIgreen) {
+            const estado = document.getElementById('estado').value;
+            let desconto = 0;
+            // Define o desconto com base no estado selecionado
+            switch (estado) {
+                case 'AL':
+                    desconto = 0.10; // 10%
+                    break;
+                case 'BA':
+                    desconto = 0.10; //10%
+                    break;
+                case 'CE':
+                    desconto = 0.05; // 5%
+                    break;
+                case 'PB':
+                    desconto = 0.08; // 8%
+                    break;
+                case 'PE':
+                    desconto = 0.05; // 5%
+                    break;
+                case 'PI':
+                    desconto = 0.08; // 8%
+                    break;
+                case 'RJ':
+                    desconto = 0.10; // 10%
+                    break;
+                case 'RN':
+                    desconto = 0.10; // 10%
+                    break;
+                default:
+                    desconto = 0; // Sem desconto
+            }
+
+            // Calcula e retorna o valor do desconto
+            return valorIgreen * desconto;
+        }
+    </script>
+</body>
+
+</html>
